@@ -1,44 +1,29 @@
-import { useEffect, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
 import htmlEntities from 'he';
 import Markdown from 'react-markdown';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { coldarkDark } from 'react-syntax-highlighter/dist/cjs/styles/prism';
+import { Comments } from '../components/posts/Comments';
+import { TitleArea } from '../components/posts/TitleArea';
 
 export function IndividualPost() {
     const { post } = useLocation().state;
 
-    const titleRef = useRef<HTMLHeadingElement>(null);
-
-    // Bypasses Vite error when assigning `textWrap` property within JSX style object
-    // (experimental CSS feature in Chrome 114+)
-    useEffect((): void => {
-        titleRef.current!.style.cssText = 'text-wrap: balance';
-    }, []);
-
     return (
-        <main className="px-4 py-8 my-10 bg-white border-2 sm:px-14 w-main drop-shadow-2xl border-slate-50 rounded-3xl">
-            <div className="flex flex-col items-center mx-auto">
+        <main className="p-4 my-4 sm:px-14 w-main">
+            <div className="flex flex-col items-center mx-auto max-w-prose">
                 <article className="w-full mb-24">
-                    <div className="mx-auto max-w-prose">
-                        {/* textWrap not recognised but experimental in Chrome 114+ */}
-                        <h1
-                            className="my-4 text-3xl font-bold text-center sm:text-4xl"
-                            ref={titleRef}
-                        >
-                            {post.title}
-                        </h1>
-
-                        <p className="mb-8 italic text-center">
-                            {post.isPublished ? 'Published on ' : 'Unpublished - '}
-                            {new Date(post.timestamp).toDateString()} - Written by{' '}
-                            {post.author.name}
-                        </p>
-                    </div>
+                    <TitleArea
+                        postID={post._id}
+                        title={post.title}
+                        author={post.author.name}
+                        category={post.category}
+                        timestamp={new Date(post.timestamp).toDateString()}
+                    />
 
                     <Markdown
                         className="prose prose-pre:p-0"
-                        children={htmlEntities.decode(post.text.join('\n'))}
+                        children={htmlEntities.decode(post.text)}
                         components={{
                             code({ className, children }) {
                                 const match = /language-(\w+)/.exec(className || '');
@@ -56,6 +41,8 @@ export function IndividualPost() {
                         }}
                     />
                 </article>
+
+                <Comments commentCount={post.comments.length} postID={post._id} />
             </div>
         </main>
     );

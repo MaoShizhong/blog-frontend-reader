@@ -1,9 +1,8 @@
 import { FormEvent, useContext, useRef, useState } from 'react';
 import { UserContext } from '../App';
-import { getFetchOptions } from '../helpers/form_options';
-import { SignupFormFields } from '../components/SignupFormFields';
-import { LoginFormFields } from '../components/LoginFormFields';
-import { API_DOMAIN } from '../helpers/domain';
+import { fetchData } from '../helpers/fetch_options';
+import { SignupFormFields } from '../components/forms/SignupFormFields';
+import { LoginFormFields } from '../components/forms/LoginFormFields';
 
 type ValidationError = {
     type: string;
@@ -31,21 +30,13 @@ export function AccountHandler({ loginType }: AccountHandlerProps) {
         e.preventDefault();
         const formData = new FormData(formRef.current!);
 
-        try {
-            const res = await fetch(
-                `${API_DOMAIN}/auth/${loginType}`,
-                getFetchOptions('POST', formData)
-            );
+        const res = await fetchData(`/auth/${loginType}`, 'POST', formData);
 
-            if (res.ok) {
-                const user = await res.json();
-                redirectToHome(user.username);
-            } else {
-                // Mostly form validation errors
-                setErrors(await res.json());
-            }
-        } catch (error) {
-            console.error(error);
+        if (res instanceof Error) {
+            console.error(res);
+        } else {
+            const user = await res.json();
+            res.ok ? redirectToHome(user) : setErrors(user);
         }
     }
 

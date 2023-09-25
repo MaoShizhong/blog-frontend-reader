@@ -6,7 +6,22 @@ type FormOptions = {
     body?: URLSearchParams;
 };
 
-export function getFetchOptions(method: HTTPVerb, formData?: FormData): FormOptions {
+// const API_DOMAIN = 'https://mao-blog-api.adaptable.app';
+const API_DOMAIN = 'http://localhost:5000';
+
+export async function fetchData(
+    endpoint: string,
+    method: HTTPVerb,
+    formData?: FormData
+): Promise<Response | Error> {
+    try {
+        return await fetch(`${API_DOMAIN}${endpoint}`, getFetchOptions(method, formData));
+    } catch (error) {
+        return error as Error;
+    }
+}
+
+function getFetchOptions(method: HTTPVerb, formData?: FormData): FormOptions {
     const formOptions: FormOptions = {
         method: method,
         credentials: 'include',

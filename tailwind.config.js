@@ -8,6 +8,10 @@ export default {
             jost: ['Jost', 'sans-serif', 'system-ui'],
         },
         extend: {
+            scale: {
+                98: '0.98',
+                120: '1.2',
+            },
             maxWidth: {
                 prose: '72ch',
             },

@@ -1,24 +1,37 @@
 import { Header } from './components/Header';
 import { Outlet, useNavigate } from 'react-router-dom';
-import { useEffect, useState, createContext } from 'react';
-import { getFetchOptions } from './helpers/form_options';
-import { API_DOMAIN } from './helpers/domain';
+import { useEffect, useState, createContext, Dispatch, SetStateAction } from 'react';
+import { fetchData } from './helpers/fetch_options';
 
-type User = string | undefined;
+type User =
+    | {
+          id: string;
+          username: string;
+          bookmarkedPosts: string[];
+      }
+    | undefined;
+
+type UserState = {
+    user: User;
+    setUser: Dispatch<SetStateAction<User>>;
+};
 
 type AuthRouteFunctions = {
-    redirectToHome: (user?: string) => void;
+    redirectToHome: (user?: User) => void;
     refreshAccessToken: () => Promise<void>;
 };
 
-export const UserContext = createContext<{ username: User } & AuthRouteFunctions>({
-    username: undefined,
+export const UserContext = createContext<UserState & AuthRouteFunctions>({
+    user: undefined,
+    setUser: (): void => {},
     redirectToHome: (): void => {},
     refreshAccessToken: async (): Promise<void> => {},
 });
 
 export function App() {
-    const [user, setUser] = useState<User>(undefined);
+    const [currentUser, setCurrentUser] = useState<User>(undefined);
+
+    console.log(currentUser);
 
     const navigateTo = useNavigate();
 
@@ -28,21 +41,23 @@ export function App() {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    function redirectToHome(currentUser?: string): void {
-        setUser(currentUser);
+    function redirectToHome(user?: User): void {
+        setCurrentUser(user);
         navigateTo('/');
     }
 
     async function refreshAccessToken(): Promise<void> {
-        const res = await fetch(`${API_DOMAIN}/auth/refresh`, getFetchOptions('GET'));
+        const res = await fetchData('/auth/refresh', 'GET');
 
-        if (res.ok) {
-            // Triggers only if status 200-299 i.e. valid refresh token found
-            const { username } = await res.json();
-            redirectToHome(username);
+        if (res instanceof Error) {
+            console.error(res);
+        } else if (res.ok) {
+            const user = await res.json();
+
+            setCurrentUser(user);
         } else {
             // Force log out if no valid refresh token
-            await fetch(`${API_DOMAIN}/auth/logout`);
+            await fetchData('/auth/logout', 'GET');
             redirectToHome();
         }
     }
@@ -50,7 +65,8 @@ export function App() {
     return (
         <UserContext.Provider
             value={{
-                username: user,
+                user: currentUser,
+                setUser: setCurrentUser,
                 redirectToHome,
                 refreshAccessToken,
             }}

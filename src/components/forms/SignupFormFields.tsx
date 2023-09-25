@@ -1,5 +1,5 @@
-import { ErrorList } from './ErrorList';
-import { Errors } from '../pages/AccountHandler';
+import { ErrorList } from '../ErrorList';
+import { Errors } from '../../pages/AccountHandler';
 
 type SignupFormProps = {
     errors: Errors;
