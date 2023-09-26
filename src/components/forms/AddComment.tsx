@@ -52,7 +52,7 @@ export function AddComment({ postID, setComments, setCommentCount, setErrors }: 
             <textarea
                 name="text"
                 rows={3}
-                placeholder="Let your thoughts be heard"
+                placeholder="Let your thoughts be heard!"
                 className="px-2 py-1 border rounded-md shadow-md bg-zinc-50"
                 ref={textareaRef}
                 required

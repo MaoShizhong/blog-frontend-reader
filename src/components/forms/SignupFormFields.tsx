@@ -14,15 +14,6 @@ export function SignupFormFields({ errors }: SignupFormProps) {
             {errors && <ErrorList errors={errors} />}
 
             <label className="flex flex-col ">
-                Name (required):
-                <input
-                    name="name"
-                    type="text"
-                    className="px-2 py-1 border border-black rounded-md"
-                    required
-                />
-            </label>
-            <label className="flex flex-col ">
                 Username (required):
                 <input
                     name="username"
@@ -51,16 +42,6 @@ export function SignupFormFields({ errors }: SignupFormProps) {
             <label className="flex flex-col">
                 Confirm password (required):
                 <input
-                    type="password"
-                    className="px-2 py-1 border border-black rounded-md"
-                    required
-                />
-            </label>
-
-            <label className="flex flex-col">
-                Enter authorisation password below:
-                <input
-                    name="authorPassword"
                     type="password"
                     className="px-2 py-1 border border-black rounded-md"
                     required
