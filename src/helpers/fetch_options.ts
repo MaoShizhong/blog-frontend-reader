@@ -6,8 +6,8 @@ type FormOptions = {
     body?: URLSearchParams;
 };
 
-// const API_DOMAIN = 'https://mao-blog-api.adaptable.app';
-const API_DOMAIN = 'http://localhost:5000';
+const API_DOMAIN = 'https://mao-blog-api.adaptable.app';
+// const API_DOMAIN = 'http://localhost:5000';
 
 export async function fetchData(
     endpoint: string,
