@@ -28,9 +28,35 @@ export type Post = {
 };
 
 export function Home() {
+    const { posts, featuredPost, errors, loading } = useGetPosts();
+
+    return (
+        <main className="flex justify-center py-10 w-main">
+            {errors || !posts ? (
+                <ErrorList errors={errors} />
+            ) : loading ? (
+                <p className="mt-20 text-lg">Fetching posts...</p>
+            ) : (
+                <div className="flex flex-col grid-cols-2 auto-rows-auto sm:grid sm:gap-6">
+                    {featuredPost && <PostPreview post={featuredPost} featured={true} />}
+
+                    {posts &&
+                        posts.map(
+                            (post, i): JSX.Element => (
+                                <PostPreview key={i} post={post} featured={false} />
+                            )
+                        )}
+                </div>
+            )}
+        </main>
+    );
+}
+
+function useGetPosts() {
     const [posts, setPosts] = useState<Post[]>([]);
-    const [errors, setErrors] = useState<Errors>(null);
     const [featuredPost, setFeaturedPost] = useState<Post | null>(null);
+    const [errors, setErrors] = useState<Errors>(null);
+    const [loading, setLoading] = useState(true);
 
     useEffect((): void => {
         (async (): Promise<void> => {
@@ -47,22 +73,10 @@ export function Home() {
                     setErrors(resAsJSON);
                 }
             }
+
+            setLoading(false);
         })();
     }, []);
 
-    return (
-        <main className="flex justify-center py-10 w-main">
-            {errors && <ErrorList errors={errors} />}
-            <div className="flex flex-col grid-cols-2 auto-rows-auto sm:grid sm:gap-6">
-                {featuredPost && <PostPreview post={featuredPost} featured={true} />}
-
-                {posts &&
-                    posts.map(
-                        (post, i): JSX.Element => (
-                            <PostPreview key={i} post={post} featured={false} />
-                        )
-                    )}
-            </div>
-        </main>
-    );
+    return { posts, featuredPost, errors, loading };
 }

@@ -5,7 +5,7 @@ export function Logo() {
     const dotRef = useRef<SVGSVGElement>(null);
 
     function toggleAnimateDot(): void {
-        if (dotRef.current) dotRef.current.classList.toggle('motion-safe:animate-left-bounce');
+        if (dotRef.current) dotRef.current.classList.toggle('motion-safe:animate-bounce');
     }
 
     return (
@@ -13,8 +13,8 @@ export function Logo() {
             <Link
                 to="/"
                 className="relative text-3xl font-bold select-none sm:text-4xl"
-                onMouseEnter={toggleAnimateDot}
-                onMouseLeave={toggleAnimateDot}
+                onPointerEnter={toggleAnimateDot}
+                onPointerLeave={toggleAnimateDot}
             >
                 <svg
                     ref={dotRef}
@@ -29,7 +29,7 @@ export function Logo() {
                 BLOG
             </Link>
             <a
-                href="https://github.com/MaoShizhong/blog-frontend-author"
+                href="https://github.com/MaoShizhong/blog-frontend-reader"
                 target="_blank"
                 rel="noreferrer"
             >

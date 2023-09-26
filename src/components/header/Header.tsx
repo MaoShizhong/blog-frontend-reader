@@ -7,7 +7,7 @@ export function Header() {
     const { user } = useContext(UserContext);
 
     return (
-        <header className="sticky top-0 z-10 flex items-center justify-center w-full gap-8 px-3 py-2 border-b shadow-md bg-zinc-50">
+        <header className="sticky top-0 z-10 flex items-center justify-center w-full gap-8 px-3 py-2 border-b shadow-md bg-zinc-50 sm:pl-scroll">
             <div className="flex items-center justify-between w-form">
                 <Logo />
 

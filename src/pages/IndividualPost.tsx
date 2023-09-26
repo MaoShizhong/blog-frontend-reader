@@ -15,10 +15,10 @@ export function IndividualPost() {
 
     return (
         <main className="p-4 pb-20 my-4 sm:px-14 w-main">
-            {error || !post ? (
+            {error ? (
                 <ErrorList errors={error} />
-            ) : loading ? (
-                <p className="mt-20">Fetching post...</p>
+            ) : loading || !post ? (
+                <p className="mt-20 text-lg">Fetching post...</p>
             ) : (
                 <div className="flex flex-col items-center mx-auto max-w-prose">
                     <article className="w-full mb-24">

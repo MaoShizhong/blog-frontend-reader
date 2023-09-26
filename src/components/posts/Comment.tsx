@@ -51,7 +51,7 @@ export function Comment({ comment, currentUsername, setComments, setCommentCount
                     </button>
                 )}
             </div>
-            <p className="text-base" aria-label="comment body">
+            <p className="text-base break-words" aria-label="comment body">
                 {htmlEntities.decode(comment.text)}
             </p>
         </div>
