@@ -29,6 +29,21 @@ export default {
                     },
                 },
             },
+            animation: {
+                'left-bounce': 'left-bounce 1s infinite',
+            },
+            keyframes: {
+                'left-bounce': {
+                    '0%, 100%': {
+                        transform: 'translateX(-35%)',
+                        animationTimingFunction: 'cubic-bezier(1, 0, 1, 1.5)',
+                    },
+                    '50%': {
+                        transform: 'translateX(0)',
+                        animationTimingFunction: 'cubic-bezier(0, -2, -2, 1.5)',
+                    },
+                },
+            },
         },
     },
     plugins: [tailwindTypography],

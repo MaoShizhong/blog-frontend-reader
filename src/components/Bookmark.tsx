@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import { useContext, useRef } from 'react';
 import { fetchData } from '../helpers/fetch_options';
 import { UserContext } from '../App';
 
@@ -6,6 +6,8 @@ type BookmarkProps = { postID: string; includeText: boolean; isBookmarked?: bool
 
 export function Bookmark({ postID, includeText, isBookmarked }: BookmarkProps) {
     const { user, setUser } = useContext(UserContext);
+
+    const iconRef = useRef<SVGSVGElement>(null);
 
     const text = isBookmarked ? 'Bookmarked' : 'Add to bookmarks';
 
@@ -26,13 +28,25 @@ export function Bookmark({ postID, includeText, isBookmarked }: BookmarkProps) {
         }
     }
 
+    function scaleIcon(scale: number): void {
+        if (iconRef.current) iconRef.current.style.transform = `scale(${scale})`;
+    }
+
     return (
         <button
             onClick={(): Promise<void> => toggleBookmark(postID)}
-            className="flex items-center gap-2 text-sm transition hover:scale-120"
+            onMouseEnter={(): void => scaleIcon(1.25)}
+            onMouseLeave={(): void => scaleIcon(1)}
+            className={`flex items-center gap-2 text-sm transition`}
         >
             {includeText && text}
-            <svg width="1.3rem" height="1.3rem" viewBox="0 -60 600 600">
+            <svg
+                className="transition"
+                ref={iconRef}
+                width="1.3rem"
+                height="1.3rem"
+                viewBox="0 -60 600 600"
+            >
                 <path
                     fill={isBookmarked ? '#196A69' : '#FAFAFA'}
                     d="M 84.555 -19.414 L 83.878 479.121 L 294.25 327.599 L 505.975 483.856 L 501.917 -22.796"

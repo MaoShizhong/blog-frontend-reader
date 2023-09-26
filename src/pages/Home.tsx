@@ -15,12 +15,14 @@ export type Post = {
     _id: string;
     author: Author;
     title: string;
+    imageURL?: string;
     timestamp: string;
     category: Category;
     text: string;
-    comments: string[];
+    commentCount: number;
     isPublished: boolean;
     isFeatured: boolean;
+    objectFit: string;
     url: string;
     clientURL: string;
 };

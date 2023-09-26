@@ -5,12 +5,22 @@ import { UserContext } from '../../App';
 type TitleAreaProps = {
     postID: string;
     title: string;
+    image?: string;
+    objectFit: string;
     author: string;
     category: string;
     timestamp: string;
 };
 
-export function TitleArea({ postID, title, author, category, timestamp }: TitleAreaProps) {
+export function TitleArea({
+    postID,
+    title,
+    image,
+    objectFit,
+    author,
+    category,
+    timestamp,
+}: TitleAreaProps) {
     const { user } = useContext(UserContext);
 
     const titleRef = useRef<HTMLHeadingElement>(null);
@@ -23,12 +33,20 @@ export function TitleArea({ postID, title, author, category, timestamp }: TitleA
 
     return (
         <div className="my-8">
+            {image && (
+                <img
+                    src={image}
+                    alt="article image"
+                    className={`${objectFit} w-full mx-auto mb-10 max-h-72`}
+                />
+            )}
+
             {/* textWrap not recognised but experimental in Chrome 114+ */}
-            <h1 className="my-2 text-3xl font-bold sm:text-4xl" ref={titleRef}>
+            <h1 className="my-2 text-4xl font-bold" ref={titleRef}>
                 {title}
             </h1>
 
-            <div className="flex flex-col items-center justify-between sm:flex-row">
+            <div className="flex flex-col items-start justify-between gap-2 sm:items-center sm:flex-row">
                 <p className="text-sm">
                     By <b>{author}</b> -{' '}
                     <i>

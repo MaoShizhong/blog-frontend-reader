@@ -1,4 +1,4 @@
-import { Header } from './components/Header';
+import { Header } from './components/header/Header';
 import { Outlet, useNavigate } from 'react-router-dom';
 import { useEffect, useState, createContext, Dispatch, SetStateAction } from 'react';
 import { fetchData } from './helpers/fetch_options';
@@ -30,8 +30,6 @@ export const UserContext = createContext<UserState & AuthRouteFunctions>({
 
 export function App() {
     const [currentUser, setCurrentUser] = useState<User>(undefined);
-
-    console.log(currentUser);
 
     const navigateTo = useNavigate();
 
