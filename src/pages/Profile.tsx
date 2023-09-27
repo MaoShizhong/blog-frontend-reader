@@ -51,6 +51,7 @@ export function Profile() {
                         <Avatar
                             username={user.username}
                             avatarColor={user.avatar}
+                            fontColour={user.fontColour}
                             isProfile={true}
                             colourPickerOpen={colourPickerOpen}
                             setColourPickerOpen={setColourPickerOpen}

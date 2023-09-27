@@ -2,11 +2,12 @@ import { timestamp } from '../../helpers/dates';
 import htmlEntities from 'he';
 import { fetchData } from '../../helpers/fetch_options';
 import { Dispatch, SetStateAction } from 'react';
-import { Avatar } from '../profile/Avatar';
+import { Avatar, FontColour } from '../profile/Avatar';
 
 type Commenter = {
     username: string;
     avatar: string;
+    fontColour: FontColour;
 };
 
 export type Comment = {
@@ -48,6 +49,7 @@ export function Comment({ comment, currentUsername, setComments, setCommentCount
                         <Avatar
                             username={comment.commenter.username}
                             avatarColor={comment.commenter.avatar}
+                            fontColour={comment.commenter.fontColour}
                             isProfile={false}
                         />
                     )}

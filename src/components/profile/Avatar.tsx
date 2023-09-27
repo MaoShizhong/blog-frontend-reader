@@ -1,8 +1,11 @@
 import { Dispatch, SetStateAction } from 'react';
 
+export type FontColour = '#FAFAFA' | '#2A2A27';
+
 type AvatarProps = {
     username: string;
     avatarColor: string;
+    fontColour: FontColour;
     isProfile: boolean;
     colourPickerOpen?: boolean;
     setColourPickerOpen?: Dispatch<SetStateAction<boolean>>;
@@ -11,6 +14,7 @@ type AvatarProps = {
 export function Avatar({
     username,
     avatarColor,
+    fontColour,
     isProfile,
     colourPickerOpen,
     setColourPickerOpen,
@@ -24,9 +28,10 @@ export function Avatar({
 
     return (
         <div
-            className={`relative grid transition rounded-md select-none place-items-center text-zinc-50 aspect-square ${hover}`}
+            className={`relative grid transition rounded-md select-none place-items-center aspect-square ${hover}`}
             style={{
                 backgroundColor: avatarColor,
+                color: fontColour,
                 height: isProfile ? '3rem' : '1.5rem',
                 fontSize: isProfile ? '2.3rem' : '1.05rem',
                 cursor: isProfile ? 'pointer' : 'default',
