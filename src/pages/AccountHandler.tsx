@@ -30,7 +30,7 @@ export function AccountHandler({ loginType }: AccountHandlerProps) {
         e.preventDefault();
         const formData = new FormData(formRef.current!);
 
-        const res = await fetchData(`/auth/${loginType}`, 'POST', formData);
+        const res = await fetchData(`/auth/${loginType}`, 'POST', formData, true);
 
         if (res instanceof Error) {
             console.error(res);

@@ -15,10 +15,7 @@ export function Navbar() {
         <nav className="flex gap-4">
             {user ? (
                 <>
-                    <NavLink
-                        to={`/users/${user.username}`}
-                        className="transition hover:text-slate-500"
-                    >
+                    <NavLink to={`/users/${user.id}`} className="transition hover:text-slate-500">
                         Account
                     </NavLink>
 

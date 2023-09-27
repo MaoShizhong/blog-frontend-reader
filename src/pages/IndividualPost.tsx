@@ -9,6 +9,7 @@ import { Post } from './Home';
 import { fetchData } from '../helpers/fetch_options';
 import { Errors } from './AccountHandler';
 import { ErrorList } from '../components/ErrorList';
+import { useParams } from 'react-router-dom';
 
 export function IndividualPost() {
     const { post, error, loading } = useGetPost();
@@ -65,22 +66,38 @@ function useGetPost() {
     const [error, setError] = useState<Errors | null>(null);
     const [loading, setLoading] = useState(true);
 
+    const { title } = useParams();
+
     useEffect((): void => {
         // ID is last part of post URL after -
-        const postID = window.location.pathname.split('-').at(-1);
+        const postID = title!.split('-').at(-1);
 
         (async (): Promise<void> => {
             const res = await fetchData(`/posts/${postID}`, 'GET');
 
-            if (res instanceof Error || !res.ok) {
+            if (res instanceof Error) {
                 setError(res as Errors);
+            } else if (!res.ok) {
+                setError(await res.json());
             } else {
-                setPost(await res.json());
+                const fetchedPost = await res.json();
+                setPost(fetchedPost);
+
+                if (!matchesTitleInURL(fetchedPost.clientURL, title!)) {
+                    setError({ message: 'Failed to fetch - no article exists with that title' });
+                }
             }
 
             setLoading(false);
         })();
-    }, []);
+    }, [title]);
 
     return { post, error, loading };
+}
+
+function matchesTitleInURL(postURL: string, path: string): boolean {
+    const titleInURL = `/${path.slice(0, path.lastIndexOf('-'))}`;
+    const postURLTitle = postURL.slice(postURL.lastIndexOf('/'), postURL.lastIndexOf('-'));
+
+    return titleInURL === postURLTitle;
 }

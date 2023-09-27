@@ -17,6 +17,7 @@ export function LoginFormFields({ errors }: LoginFormFieldsProps) {
                 <input
                     name="username"
                     type="text"
+                    autoComplete="true"
                     className="px-2 py-1 border border-black rounded-md"
                 />
             </label>

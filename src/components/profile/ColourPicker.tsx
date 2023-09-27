@@ -51,7 +51,7 @@ export function ColourPicker({
     }
 
     return (
-        <div className="my-4">
+        <dialog open className="relative my-4 bg-transparent">
             <h2 className="my-2 text-center select-none">Select a new avatar colour</h2>
 
             {errors && <ErrorList errors={errors} />}
@@ -71,6 +71,6 @@ export function ColourPicker({
                     )
                 )}
             </div>
-        </div>
+        </dialog>
     );
 }

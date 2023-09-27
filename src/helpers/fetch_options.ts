@@ -12,12 +12,13 @@ const API_DOMAIN = 'https://mao-blog-api.adaptable.app';
 export async function fetchData(
     endpoint: string,
     method: HTTPVerb,
-    formData?: FormData
+    formData?: FormData,
+    isSignupLogin: boolean = false
 ): Promise<Response | Error> {
     try {
         const res = await fetch(`${API_DOMAIN}${endpoint}`, getFetchOptions(method, formData));
 
-        if (res.ok) {
+        if (res.ok || isSignupLogin) {
             return res;
         } else {
             const refresh = await fetch(`${API_DOMAIN}/auth/refresh`, getFetchOptions('GET'));
