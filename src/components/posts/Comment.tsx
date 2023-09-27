@@ -2,9 +2,12 @@ import { timestamp } from '../../helpers/dates';
 import htmlEntities from 'he';
 import { fetchData } from '../../helpers/fetch_options';
 import { Dispatch, SetStateAction } from 'react';
+import { Avatar } from '../profile/Avatar';
+import { AvatarColour } from '../profile/ColourPicker';
 
 type Commenter = {
     username: string;
+    avatar: AvatarColour;
 };
 
 export type Comment = {
@@ -38,9 +41,16 @@ export function Comment({ comment, currentUsername, setComments, setCommentCount
     return (
         <div className="flex flex-col justify-between gap-2 p-3 my-2 text-sm border rounded-md shadow-md">
             <div className="flex justify-between">
-                <p aria-label="comment details">
-                    <b>{comment.commenter.username}</b> - <i>{timestamp(comment.timestamp)}</i>
-                </p>
+                <div className="flex items-center gap-2">
+                    <Avatar
+                        username={comment.commenter.username}
+                        avatarColor={comment.commenter.avatar}
+                        isProfile={false}
+                    />
+                    <p aria-label="comment details">
+                        <b>{comment.commenter.username}</b> - <i>{timestamp(comment.timestamp)}</i>
+                    </p>
+                </div>
                 {currentUsername === comment.commenter.username && (
                     <button
                         onClick={deleteComment}
@@ -51,7 +61,7 @@ export function Comment({ comment, currentUsername, setComments, setCommentCount
                     </button>
                 )}
             </div>
-            <p className="text-base break-words" aria-label="comment body">
+            <p className="text-base break-words whitespace-pre-wrap" aria-label="comment body">
                 {htmlEntities.decode(comment.text)}
             </p>
         </div>

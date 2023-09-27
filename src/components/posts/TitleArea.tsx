@@ -42,7 +42,7 @@ export function TitleArea({
             )}
 
             {/* textWrap not recognised but experimental in Chrome 114+ */}
-            <h1 className="my-2 text-4xl font-bold" ref={titleRef}>
+            <h1 className="my-2 text-4xl font-bold leading-tight" ref={titleRef}>
                 {title}
             </h1>
 

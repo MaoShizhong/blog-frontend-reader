@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from 'react';
 import { Comment } from './Comment';
 import { fetchData } from '../../helpers/fetch_options';
 import { UserContext } from '../../App';
-import { AddComment } from '../forms/AddComment';
+import { AddComment } from './AddComment';
 import { Link } from 'react-router-dom';
 
 type CommentsProps = {

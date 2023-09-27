@@ -15,7 +15,24 @@ export async function fetchData(
     formData?: FormData
 ): Promise<Response | Error> {
     try {
-        return await fetch(`${API_DOMAIN}${endpoint}`, getFetchOptions(method, formData));
+        const res = await fetch(`${API_DOMAIN}${endpoint}`, getFetchOptions(method, formData));
+
+        if (res.ok) {
+            return res;
+        } else {
+            const refresh = await fetch(`${API_DOMAIN}/auth/refresh`, getFetchOptions('GET'));
+
+            if (!refresh.ok) {
+                return refresh;
+            } else {
+                const retry = await fetch(
+                    `${API_DOMAIN}${endpoint}`,
+                    getFetchOptions(method, formData)
+                );
+
+                return retry;
+            }
+        }
     } catch (error) {
         return error as Error;
     }

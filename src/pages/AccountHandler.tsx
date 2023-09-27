@@ -1,8 +1,8 @@
 import { FormEvent, useContext, useRef, useState } from 'react';
 import { UserContext } from '../App';
 import { fetchData } from '../helpers/fetch_options';
-import { SignupFormFields } from '../components/forms/SignupFormFields';
-import { LoginFormFields } from '../components/forms/LoginFormFields';
+import { SignupFormFields } from '../components/login/SignupFormFields';
+import { LoginFormFields } from '../components/login/LoginFormFields';
 
 type ValidationError = {
     type: string;

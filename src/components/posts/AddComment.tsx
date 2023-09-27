@@ -1,6 +1,6 @@
 import { Dispatch, FormEvent, SetStateAction, useContext, useRef } from 'react';
 import { fetchData } from '../../helpers/fetch_options';
-import { Comment } from '../posts/Comment';
+import { Comment } from './Comment';
 import { UserContext } from '../../App';
 
 type AddCommentProps = {
@@ -41,7 +41,6 @@ export function AddComment({ postID, setComments, setCommentCount, setErrors }: 
             setCommentCount((prev): number => prev + 1);
 
             textareaRef.current.value = '';
-            console.log(newComment);
         } else {
             setErrors(await res.json());
         }
@@ -57,6 +56,7 @@ export function AddComment({ postID, setComments, setCommentCount, setErrors }: 
                 ref={textareaRef}
                 required
             ></textarea>
+
             <button className="self-end px-2 border rounded-md shadow-md active:scale-95 hover:drop-shadow-lg bg-zinc-50">
                 Post comment
             </button>

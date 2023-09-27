@@ -18,7 +18,7 @@ export function IndividualPost() {
             {error ? (
                 <ErrorList errors={error} />
             ) : loading || !post ? (
-                <p className="mt-20 text-lg">Fetching post...</p>
+                <p className="mt-20 text-lg text-center">Fetching post...</p>
             ) : (
                 <div className="flex flex-col items-center mx-auto max-w-prose">
                     <article className="w-full mb-24">

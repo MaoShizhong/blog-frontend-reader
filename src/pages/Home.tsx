@@ -66,6 +66,7 @@ function useGetPosts() {
                 console.error(res);
             } else {
                 const resAsJSON = await res.json();
+
                 if (res.ok) {
                     setPosts(resAsJSON);
                     setFeaturedPost(resAsJSON.find((post: Post): boolean => post.isFeatured));
