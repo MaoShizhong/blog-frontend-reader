@@ -22,10 +22,14 @@ export function BookmarkedPosts({ user }: BookmarkedPostsProps): JSX.Element {
             ) : (
                 <>
                     <h2 className="text-lg font-bold text-center">Bookmarks</h2>
-                    {bookmarkedPosts.map(
-                        (post, i): JSX.Element => (
-                            <PostPreview key={i} post={post} featured={false} />
+                    {bookmarkedPosts.length ? (
+                        bookmarkedPosts.map(
+                            (post, i): JSX.Element => (
+                                <PostPreview key={i} post={post} featured={false} />
+                            )
                         )
+                    ) : (
+                        <p>You do not have any bookmarked articles</p>
                     )}
                 </>
             )}
