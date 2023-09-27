@@ -2,13 +2,12 @@ import { Header } from './components/header/Header';
 import { Outlet, useNavigate } from 'react-router-dom';
 import { useEffect, useState, createContext, Dispatch, SetStateAction } from 'react';
 import { fetchData } from './helpers/fetch_options';
-import { AvatarColour } from './components/profile/ColourPicker';
 
 export type User =
     | {
           id: string;
           username: string;
-          avatar: AvatarColour;
+          avatar: string;
           bookmarkedPosts: string[];
       }
     | undefined;
