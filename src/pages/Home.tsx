@@ -16,6 +16,7 @@ export type Post = {
     author: Author;
     title: string;
     imageURL?: string;
+    imageCredit?: string;
     timestamp: string;
     category: Category;
     text: string;

@@ -26,6 +26,7 @@ export function IndividualPost() {
                         <TitleArea
                             postID={post._id}
                             image={post.imageURL}
+                            credit={post.imageCredit}
                             objectFit={post.objectFit}
                             title={post.title}
                             author={post.author.name}

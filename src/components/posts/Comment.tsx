@@ -3,11 +3,10 @@ import htmlEntities from 'he';
 import { fetchData } from '../../helpers/fetch_options';
 import { Dispatch, SetStateAction } from 'react';
 import { Avatar } from '../profile/Avatar';
-import { AvatarColour } from '../profile/ColourPicker';
 
 type Commenter = {
     username: string;
-    avatar: AvatarColour;
+    avatar: string;
 };
 
 export type Comment = {
@@ -27,6 +26,9 @@ type CommentProps = {
 };
 
 export function Comment({ comment, currentUsername, setComments, setCommentCount }: CommentProps) {
+    const notDeleted = !!comment.commenter;
+    const deletedClass = notDeleted ? '' : 'italic text-sm';
+
     async function deleteComment(): Promise<void> {
         const res = await fetchData(`/comments/${comment._id}`, 'DELETE');
 
@@ -39,19 +41,23 @@ export function Comment({ comment, currentUsername, setComments, setCommentCount
     }
 
     return (
-        <div className="flex flex-col justify-between gap-2 p-3 my-2 text-sm border rounded-md shadow-md">
+        <div className="flex flex-col justify-between gap-2 p-3 my-2 text-sm border rounded-md shadow-md bg-zinc-50">
             <div className="flex justify-between">
                 <div className="flex items-center gap-2">
-                    <Avatar
-                        username={comment.commenter.username}
-                        avatarColor={comment.commenter.avatar}
-                        isProfile={false}
-                    />
-                    <p aria-label="comment details">
-                        <b>{comment.commenter.username}</b> - <i>{timestamp(comment.timestamp)}</i>
+                    {notDeleted && (
+                        <Avatar
+                            username={comment.commenter.username}
+                            avatarColor={comment.commenter.avatar}
+                            isProfile={false}
+                        />
+                    )}
+                    <p className={deletedClass} aria-label="comment details">
+                        <b>{notDeleted ? comment.commenter.username : 'deleted'}</b> -{' '}
+                        <i>{timestamp(comment.timestamp)}</i>
                     </p>
                 </div>
-                {currentUsername === comment.commenter.username && (
+
+                {notDeleted && currentUsername === comment.commenter.username && (
                     <button
                         onClick={deleteComment}
                         className="transition hover:text-zinc-500"
@@ -61,8 +67,12 @@ export function Comment({ comment, currentUsername, setComments, setCommentCount
                     </button>
                 )}
             </div>
-            <p className="text-base break-words whitespace-pre-wrap" aria-label="comment body">
-                {htmlEntities.decode(comment.text)}
+
+            <p
+                className={`text-base break-words whitespace-pre-wrap ${deletedClass}`}
+                aria-label="comment body"
+            >
+                {htmlEntities.decode(comment.text || 'deleted')}
             </p>
         </div>
     );

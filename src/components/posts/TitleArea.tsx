@@ -6,6 +6,7 @@ type TitleAreaProps = {
     postID: string;
     title: string;
     image?: string;
+    credit?: string;
     objectFit: string;
     author: string;
     category: string;
@@ -16,6 +17,7 @@ export function TitleArea({
     postID,
     title,
     image,
+    credit,
     objectFit,
     author,
     category,
@@ -34,11 +36,16 @@ export function TitleArea({
     return (
         <div className="my-8">
             {image && (
-                <img
-                    src={image}
-                    alt="article image"
-                    className={`${objectFit} w-full mx-auto mb-10 max-h-72`}
-                />
+                <div className="mb-6">
+                    <img
+                        src={image}
+                        alt="article image"
+                        className={`${objectFit} w-full mx-auto max-h-72`}
+                    />
+                    {image && credit && (
+                        <p className="mt-2 text-xs italic text-right">Image from {credit}</p>
+                    )}
+                </div>
             )}
 
             {/* textWrap not recognised but experimental in Chrome 114+ */}
