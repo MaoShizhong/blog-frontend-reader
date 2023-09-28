@@ -16,16 +16,18 @@ export function Logo() {
                 onPointerEnter={toggleAnimateDot}
                 onPointerLeave={toggleAnimateDot}
             >
-                <svg
-                    ref={dotRef}
-                    className="absolute transition bottom-[7px] -left-3"
-                    width="0.6rem"
-                    height="0.6rem"
-                    fill="#27272a"
-                    viewBox="0 0 15 15"
-                >
-                    <path d="M14,7.5c0,3.5899-2.9101,6.5-6.5,6.5S1,11.0899,1,7.5S3.9101,1,7.5,1S14,3.9101,14,7.5z" />
-                </svg>
+                {window.location.pathname !== '/error' && (
+                    <svg
+                        ref={dotRef}
+                        className="absolute transition bottom-[7px] -left-3"
+                        width="0.6rem"
+                        height="0.6rem"
+                        fill="#27272a"
+                        viewBox="0 0 15 15"
+                    >
+                        <path d="M14,7.5c0,3.5899-2.9101,6.5-6.5,6.5S1,11.0899,1,7.5S3.9101,1,7.5,1S14,3.9101,14,7.5z" />
+                    </svg>
+                )}
                 BLOG
             </Link>
             <a

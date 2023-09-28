@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { Errors } from './AccountHandler';
 import { ErrorList } from '../components/ErrorList';
 import { PostPreview } from '../components/posts/PostPreview';
-import { ErrorPage } from './ErrorPage';
+import { useNavigate } from 'react-router-dom';
 
 type Author = {
     name: string;
@@ -30,33 +30,27 @@ export type Post = {
 };
 
 export function Home() {
-    const { posts, featuredPost, errors, fetchError, loading } = useGetPosts();
+    const { posts, featuredPost, errors, loading } = useGetPosts();
 
     return (
-        <>
-            {fetchError ? (
-                <ErrorPage />
+        <main className="flex justify-center py-10 w-main">
+            {errors || !posts ? (
+                <ErrorList errors={errors} />
+            ) : loading ? (
+                <p className="mt-20 text-lg">Fetching posts...</p>
             ) : (
-                <main className="flex justify-center py-10 w-main">
-                    {errors || !posts ? (
-                        <ErrorList errors={errors} />
-                    ) : loading ? (
-                        <p className="mt-20 text-lg">Fetching posts...</p>
-                    ) : (
-                        <div className="flex flex-col grid-cols-2 auto-rows-auto sm:grid sm:gap-6">
-                            {featuredPost && <PostPreview post={featuredPost} featured={true} />}
+                <div className="flex flex-col grid-cols-2 auto-rows-auto sm:grid sm:gap-6">
+                    {featuredPost && <PostPreview post={featuredPost} featured={true} />}
 
-                            {posts &&
-                                posts.map(
-                                    (post): JSX.Element => (
-                                        <PostPreview key={post._id} post={post} featured={false} />
-                                    )
-                                )}
-                        </div>
-                    )}
-                </main>
+                    {posts &&
+                        posts.map(
+                            (post): JSX.Element => (
+                                <PostPreview key={post._id} post={post} featured={false} />
+                            )
+                        )}
+                </div>
             )}
-        </>
+        </main>
     );
 }
 
@@ -64,15 +58,16 @@ function useGetPosts() {
     const [posts, setPosts] = useState<Post[]>([]);
     const [featuredPost, setFeaturedPost] = useState<Post | null>(null);
     const [errors, setErrors] = useState<Errors>(null);
-    const [fetchError, setFetchError] = useState(false);
     const [loading, setLoading] = useState(true);
+
+    const navigateTo = useNavigate();
 
     useEffect((): void => {
         (async (): Promise<void> => {
             const res = await fetchData('/posts', 'GET');
 
             if (res instanceof Error) {
-                setFetchError(true);
+                navigateTo('/error');
             } else {
                 const resAsJSON = await res.json();
 
@@ -88,5 +83,5 @@ function useGetPosts() {
         })();
     }, []);
 
-    return { posts, featuredPost, errors, fetchError, loading };
+    return { posts, featuredPost, errors, loading };
 }
