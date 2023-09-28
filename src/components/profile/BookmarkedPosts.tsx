@@ -24,8 +24,8 @@ export function BookmarkedPosts({ user }: BookmarkedPostsProps): JSX.Element {
                     <h2 className="text-lg font-bold text-center">Bookmarks</h2>
                     {bookmarkedPosts.length ? (
                         bookmarkedPosts.map(
-                            (post, i): JSX.Element => (
-                                <PostPreview key={i} post={post} featured={false} />
+                            (post): JSX.Element => (
+                                <PostPreview key={post._id} post={post} featured={false} />
                             )
                         )
                     ) : (

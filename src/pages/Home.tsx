@@ -48,8 +48,8 @@ export function Home() {
 
                             {posts &&
                                 posts.map(
-                                    (post, i): JSX.Element => (
-                                        <PostPreview key={i} post={post} featured={false} />
+                                    (post): JSX.Element => (
+                                        <PostPreview key={post._id} post={post} featured={false} />
                                     )
                                 )}
                         </div>

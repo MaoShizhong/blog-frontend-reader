@@ -2,6 +2,8 @@ import { timestamp } from '../../helpers/dates';
 import htmlEntities from 'he';
 import { fetchData } from '../../helpers/fetch_options';
 import { Avatar, FontColour } from '../profile/Avatar';
+import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
 
 type Commenter = {
     username: string;
@@ -25,16 +27,22 @@ type CommentProps = {
 };
 
 export function Comment({ comment, currentUsername }: CommentProps) {
-    const notDeleted = !comment.deleted;
+    const [currentComment, setCurrentComment] = useState<Comment>(comment);
+
+    const notDeleted = !currentComment.deleted;
     const deletedClass = notDeleted ? '' : 'italic text-sm';
+
+    const navigateTo = useNavigate();
 
     async function deleteComment(): Promise<void> {
         const res = await fetchData(`/comments/${comment._id}`, 'DELETE');
 
-        // Successful delete simply marks comment as deleted - still counted/displayed
-        // with empty text
+        // Successful delete simply marks comment as deleted
+        // but still counted/displayed with empty text
         if (res instanceof Error || !res.ok) {
-            console.error(res);
+            navigateTo('/error');
+        } else {
+            setCurrentComment(await res.json());
         }
     }
 
@@ -44,19 +52,19 @@ export function Comment({ comment, currentUsername }: CommentProps) {
                 <div className="flex items-center gap-2">
                     {notDeleted && (
                         <Avatar
-                            username={comment.commenter.username}
-                            avatarColor={comment.commenter.avatar}
-                            fontColour={comment.commenter.fontColour}
+                            username={currentComment.commenter.username}
+                            avatarColor={currentComment.commenter.avatar}
+                            fontColour={currentComment.commenter.fontColour}
                             isProfile={false}
                         />
                     )}
                     <p className={deletedClass} aria-label="comment details">
-                        <b>{notDeleted ? comment.commenter.username : 'deleted'}</b> -{' '}
-                        <i>{timestamp(comment.timestamp)}</i>
+                        <b>{notDeleted ? currentComment.commenter.username : 'deleted'}</b> -{' '}
+                        <i>{timestamp(currentComment.timestamp)}</i>
                     </p>
                 </div>
 
-                {notDeleted && currentUsername === comment.commenter.username && (
+                {notDeleted && currentUsername === currentComment.commenter.username && (
                     <button
                         onClick={deleteComment}
                         className="transition hover:text-zinc-500"
@@ -71,7 +79,7 @@ export function Comment({ comment, currentUsername }: CommentProps) {
                 className={`text-base break-words whitespace-pre-wrap ${deletedClass}`}
                 aria-label="comment body"
             >
-                {htmlEntities.decode(comment.text || 'deleted')}
+                {htmlEntities.decode(currentComment.text || 'deleted')}
             </p>
         </div>
     );

@@ -2,6 +2,7 @@ import { Dispatch, FormEvent, SetStateAction, useContext, useRef } from 'react';
 import { fetchData } from '../../helpers/fetch_options';
 import { Comment } from './Comment';
 import { UserContext } from '../../App';
+import { useNavigate } from 'react-router-dom';
 
 type AddCommentProps = {
     postID: string;
@@ -15,6 +16,7 @@ export function AddComment({ postID, setComments, setCommentCount, setErrors }: 
 
     const formRef = useRef<HTMLFormElement>(null);
     const textareaRef = useRef<HTMLTextAreaElement>(null);
+    const navigateTo = useNavigate();
 
     async function postComment(e: FormEvent): Promise<void> {
         e.preventDefault();
@@ -33,7 +35,7 @@ export function AddComment({ postID, setComments, setCommentCount, setErrors }: 
         );
 
         if (res instanceof Error) {
-            console.error(res);
+            navigateTo('/error');
         } else if (res.ok) {
             const newComment = await res.json();
 

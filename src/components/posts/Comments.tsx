@@ -71,9 +71,15 @@ export function Comments({ commentCount, postID }: CommentsProps) {
             <hr className="my-8" />
 
             <div className="flex flex-col">
-                {comments.map((comment, i) => (
-                    <Comment key={i} comment={comment} currentUsername={user?.username} />
-                ))}
+                {comments.map(
+                    (comment): JSX.Element => (
+                        <Comment
+                            key={comment._id}
+                            comment={comment}
+                            currentUsername={user?.username}
+                        />
+                    )
+                )}
             </div>
         </section>
     );
