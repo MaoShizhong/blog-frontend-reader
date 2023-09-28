@@ -17,7 +17,7 @@ export function DeleteProfile() {
     async function deleteAccount(): Promise<void> {
         const res = await fetchData(`/users/${userID}`, 'DELETE');
         if (res instanceof Error) {
-            console.error(res);
+            navigateTo('/error');
         } else if (res.ok) {
             redirectToHome();
         } else {

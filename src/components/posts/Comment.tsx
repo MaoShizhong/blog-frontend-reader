@@ -1,7 +1,6 @@
 import { timestamp } from '../../helpers/dates';
 import htmlEntities from 'he';
 import { fetchData } from '../../helpers/fetch_options';
-import { Dispatch, SetStateAction } from 'react';
 import { Avatar, FontColour } from '../profile/Avatar';
 
 type Commenter = {
@@ -17,27 +16,25 @@ export type Comment = {
     timestamp: string;
     text: string;
     replies: Comment[];
+    deleted: boolean;
 };
 
 type CommentProps = {
     comment: Comment;
     currentUsername?: string;
-    setComments: Dispatch<SetStateAction<Comment[]>>;
-    setCommentCount: Dispatch<SetStateAction<number>>;
 };
 
-export function Comment({ comment, currentUsername, setComments, setCommentCount }: CommentProps) {
-    const notDeleted = !!comment.commenter;
+export function Comment({ comment, currentUsername }: CommentProps) {
+    const notDeleted = !comment.deleted;
     const deletedClass = notDeleted ? '' : 'italic text-sm';
 
     async function deleteComment(): Promise<void> {
         const res = await fetchData(`/comments/${comment._id}`, 'DELETE');
 
+        // Successful delete simply marks comment as deleted - still counted/displayed
+        // with empty text
         if (res instanceof Error || !res.ok) {
             console.error(res);
-        } else {
-            setComments((prev): Comment[] => prev.filter((cmnt) => cmnt._id !== comment._id));
-            setCommentCount((prev): number => prev - 1);
         }
     }
 

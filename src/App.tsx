@@ -48,17 +48,17 @@ export function App() {
     }
 
     async function refreshAccessToken(): Promise<void> {
-        const res = await fetchData('/auth/refresh', 'GET');
+        const res = await fetchData('/auth/tokens', 'PUT');
 
         if (res instanceof Error) {
-            console.error(res);
+            navigateTo('/error');
         } else if (res.ok) {
             const user = await res.json();
 
             setCurrentUser(user);
         } else {
             // Force log out if no valid refresh token
-            await fetchData('/auth/logout', 'GET');
+            await fetchData('/auth/tokens', 'DELETE');
             redirectToHome();
         }
     }

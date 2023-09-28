@@ -7,7 +7,7 @@ export function Navbar() {
     const { user, redirectToHome } = useContext(UserContext);
 
     async function logout(): Promise<void> {
-        await fetchData('/auth/logout', 'GET');
+        await fetchData('/auth/tokens', 'DELETE');
         redirectToHome();
     }
 

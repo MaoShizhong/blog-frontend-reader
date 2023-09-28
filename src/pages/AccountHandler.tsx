@@ -3,6 +3,7 @@ import { UserContext } from '../App';
 import { fetchData } from '../helpers/fetch_options';
 import { SignupFormFields } from '../components/login/SignupFormFields';
 import { LoginFormFields } from '../components/login/LoginFormFields';
+import { useNavigate } from 'react-router-dom';
 
 type ValidationError = {
     type: string;
@@ -25,15 +26,18 @@ export function AccountHandler({ loginType }: AccountHandlerProps) {
     const { redirectToHome } = useContext(UserContext);
 
     const formRef = useRef<HTMLFormElement>(null);
+    const navigateTo = useNavigate();
 
     async function login(e: FormEvent, loginType: AccessType): Promise<void> {
         e.preventDefault();
-        const formData = new FormData(formRef.current!);
 
-        const res = await fetchData(`/auth/${loginType}`, 'POST', formData, true);
+        const formData = new FormData(formRef.current!);
+        const endpoint = loginType === 'login' ? 'tokens' : 'user';
+
+        const res = await fetchData(`/auth/${endpoint}`, 'POST', formData, true);
 
         if (res instanceof Error) {
-            console.error(res);
+            navigateTo('/error');
         } else {
             const user = await res.json();
             res.ok ? redirectToHome(user) : setErrors(user);

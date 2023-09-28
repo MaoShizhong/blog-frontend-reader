@@ -13,6 +13,7 @@ export const router = createBrowserRouter([
         element: <App />,
         children: [
             { path: '/', element: <Home /> },
+            { path: '/error', element: <ErrorPage /> },
             { path: '/login', element: <AccountHandler loginType="login" /> },
             { path: '/signup', element: <AccountHandler loginType="signup" /> },
             { path: '/:category/:title', element: <IndividualPost /> },

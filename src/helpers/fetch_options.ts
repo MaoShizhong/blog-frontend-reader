@@ -6,8 +6,7 @@ type FormOptions = {
     body?: URLSearchParams;
 };
 
-const API_DOMAIN = 'https://mao-blog-api.adaptable.app';
-// const API_DOMAIN = 'http://localhost:5000';
+const API_DOMAIN = import.meta.env.VITE_PROD_API;
 
 export async function fetchData(
     endpoint: string,
@@ -21,7 +20,7 @@ export async function fetchData(
         if (res.ok || isSignupLogin) {
             return res;
         } else {
-            const refresh = await fetch(`${API_DOMAIN}/auth/refresh`, getFetchOptions('GET'));
+            const refresh = await fetch(`${API_DOMAIN}/auth/tokens`, getFetchOptions('PUT'));
 
             if (!refresh.ok) {
                 return refresh;

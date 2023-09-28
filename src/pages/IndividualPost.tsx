@@ -9,7 +9,7 @@ import { Post } from './Home';
 import { fetchData } from '../helpers/fetch_options';
 import { Errors } from './AccountHandler';
 import { ErrorList } from '../components/ErrorList';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 export function IndividualPost() {
     const { post, error, loading } = useGetPost();
@@ -69,6 +69,8 @@ function useGetPost() {
 
     const { title } = useParams();
 
+    const navigateTo = useNavigate();
+
     useEffect((): void => {
         // ID is last part of post URL after -
         const postID = title!.split('-').at(-1);
@@ -77,7 +79,7 @@ function useGetPost() {
             const res = await fetchData(`/posts/${postID}`, 'GET');
 
             if (res instanceof Error) {
-                setError(res as Errors);
+                navigateTo('/error');
             } else if (!res.ok) {
                 setError(await res.json());
             } else {

@@ -6,7 +6,7 @@ import { Errors } from './AccountHandler';
 import { ErrorList } from '../components/ErrorList';
 import { BookmarkedPosts } from '../components/profile/BookmarkedPosts';
 import { ColourPicker } from '../components/profile/ColourPicker';
-import { Link, Navigate, useParams } from 'react-router-dom';
+import { Link, Navigate, useNavigate, useParams } from 'react-router-dom';
 
 export function Profile() {
     const { user, setUser } = useContext(UserContext);
@@ -17,6 +17,7 @@ export function Profile() {
 
     const { userID } = useParams();
     const inputRef = useRef<HTMLInputElement>(null);
+    const navigateTo = useNavigate();
 
     useEffect((): void => {
         if (enableEditUsername) inputRef.current?.focus();
@@ -29,7 +30,7 @@ export function Profile() {
         );
 
         if (res instanceof Error) {
-            console.error(res);
+            navigateTo('/error');
         } else if (res.ok) {
             setUser(await res.json());
             setUsernameError(null);
