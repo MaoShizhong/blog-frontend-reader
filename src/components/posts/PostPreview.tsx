@@ -3,6 +3,7 @@ import { Post } from '../../pages/Home';
 import { Bookmark } from '../Bookmark';
 import { useContext } from 'react';
 import { UserContext } from '../../App';
+import htmlEntities from 'he';
 
 type PostPreviewProps = { post: Post; featured: boolean };
 
@@ -39,7 +40,7 @@ export function PostPreview({ post, featured }: PostPreviewProps) {
                         to={post.clientURL}
                         className="self-start text-2xl font-bold transition hover:text-zinc-500"
                     >
-                        {post.title}
+                        {htmlEntities.decode(post.title)}
                     </Link>
                     <p className="text-sm">
                         Written by {post.author.name} -{' '}
