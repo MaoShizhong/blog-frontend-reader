@@ -105,14 +105,16 @@ export function Comment({ comment, currentUsername, level, setCommentCount }: Co
                             </p>
                         </div>
 
-                        <button
-                            onClick={(): void => setIsExpanded(!isExpanded)}
-                            aria-label={
-                                isExpanded ? 'collapse comment' : 'expand collapsed comment'
-                            }
-                        >
-                            {isExpanded ? '🞁' : '🞃'}
-                        </button>
+                        {(!deleted || hasReplies) && (
+                            <button
+                                onClick={(): void => setIsExpanded(!isExpanded)}
+                                aria-label={
+                                    isExpanded ? 'collapse comment' : 'expand collapsed comment'
+                                }
+                            >
+                                {isExpanded ? '🞁' : '🞃'}
+                            </button>
+                        )}
                     </div>
 
                     {/* Comment body text */}
