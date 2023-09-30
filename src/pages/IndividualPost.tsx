@@ -10,16 +10,17 @@ import { fetchData } from '../helpers/fetch_options';
 import { Errors } from './AccountHandler';
 import { ErrorList } from '../components/ErrorList';
 import { useNavigate, useParams } from 'react-router-dom';
+import { Loading } from '../components/Loading';
 
 export function IndividualPost() {
     const { post, error, loading } = useGetPost();
 
     return (
-        <main className="p-4 pb-20 my-4 sm:px-14 w-main">
+        <main className="flex flex-col items-center p-4 pb-20 my-4 sm:px-14 w-main">
             {error ? (
                 <ErrorList errors={error} />
             ) : loading || !post ? (
-                <p className="mt-20 text-lg text-center">Fetching post...</p>
+                <Loading text="Fetching article..." />
             ) : (
                 <div className="flex flex-col items-center mx-auto max-w-prose">
                     <article className="w-full mb-24">

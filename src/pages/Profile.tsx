@@ -46,7 +46,7 @@ export function Profile() {
             {!user || user.id !== userID ? (
                 <Navigate to="/" />
             ) : (
-                <main className="flex flex-col items-center py-10 w-main">
+                <main className="flex flex-col items-center py-10 w-main sm:pl-scroll">
                     {usernameError && <ErrorList errors={usernameError} />}
                     <section className="flex items-center justify-between gap-4">
                         <Avatar

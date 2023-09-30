@@ -6,6 +6,7 @@ import { Post } from '../../pages/Home';
 import { Errors } from '../../pages/AccountHandler';
 import { ErrorList } from '../ErrorList';
 import { useNavigate } from 'react-router-dom';
+import { Loading } from '../Loading';
 
 type BookmarkedPostsProps = {
     user: User;
@@ -19,7 +20,7 @@ export function BookmarkedPosts({ user }: BookmarkedPostsProps): JSX.Element {
             {errors ? (
                 <ErrorList errors={errors} />
             ) : loading ? (
-                <p className="text-center">Fetching bookmarks...</p>
+                <Loading text="Fetching bookmarks..." />
             ) : (
                 <>
                     <h2 className="text-lg font-bold text-center">Bookmarks</h2>

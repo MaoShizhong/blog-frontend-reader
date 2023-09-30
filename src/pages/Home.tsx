@@ -4,6 +4,7 @@ import { Errors } from './AccountHandler';
 import { ErrorList } from '../components/ErrorList';
 import { PostPreview } from '../components/posts/PostPreview';
 import { useNavigate } from 'react-router-dom';
+import { Loading } from '../components/Loading';
 
 type Author = {
     name: string;
@@ -37,7 +38,7 @@ export function Home() {
             {errors || !posts ? (
                 <ErrorList errors={errors} />
             ) : loading ? (
-                <p className="mt-20 text-lg">Fetching posts...</p>
+                <Loading text="Fetching articles..." />
             ) : (
                 <div className="flex flex-col grid-cols-2 auto-rows-auto sm:grid sm:gap-6">
                     {featuredPost && <PostPreview post={featuredPost} featured={true} />}
