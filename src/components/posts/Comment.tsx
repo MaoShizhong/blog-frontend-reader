@@ -3,7 +3,9 @@ import htmlEntities from 'he';
 import { fetchData } from '../../helpers/fetch_options';
 import { Avatar, FontColour } from '../profile/Avatar';
 import { useNavigate } from 'react-router-dom';
-import { useState } from 'react';
+import { Dispatch, SetStateAction, useState } from 'react';
+import { AddComment } from './AddComment';
+import { CommentButtons } from './CommentButtons';
 
 type Commenter = {
     username: string;
@@ -13,7 +15,7 @@ type Commenter = {
 
 export type Comment = {
     _id: string;
-    postID: string;
+    post: string;
     commenter: Commenter;
     timestamp: string;
     text: string;
@@ -24,18 +26,36 @@ export type Comment = {
 type CommentProps = {
     comment: Comment;
     currentUsername?: string;
+    level: number;
+    setCommentCount: Dispatch<SetStateAction<number>>;
 };
 
-export function Comment({ comment, currentUsername }: CommentProps) {
-    const [currentComment, setCurrentComment] = useState<Comment>(comment);
+const levelLimit = 3;
 
-    const notDeleted = !currentComment.deleted;
-    const deletedClass = notDeleted ? '' : 'italic text-sm';
+/*
+    - Nested comments - recursive - defaults to showing max 3 layers of comments
+    - Last comments can be individually expanded, increasing levelLimit for that specific chain
+*/
+export function Comment({ comment, currentUsername, level, setCommentCount }: CommentProps) {
+    const [currentLevel, setCurrentLevel] = useState(level);
+    const [currentComment, setCurrentComment] = useState<Comment>(comment);
+    const [isExpanded, setIsExpanded] = useState(true);
+    const [isLastLevelShown, setIsLastLevelShown] = useState(currentLevel === levelLimit);
+    const [replyTextareaOpen, setReplyTextareaOpen] = useState(false);
+
+    const deleted = currentComment.deleted;
+    const deletedClass = !deleted ? 'pt-3' : 'italic pt-1';
+
+    const hasReplies = currentComment.replies && currentComment.replies.length > 0;
+    const hasRepliesToShow = currentLevel < levelLimit && hasReplies;
 
     const navigateTo = useNavigate();
 
     async function deleteComment(): Promise<void> {
-        const res = await fetchData(`/comments/${comment._id}`, 'DELETE');
+        const res = await fetchData(
+            `/comments/${currentComment._id}?level=${currentLevel}`,
+            'DELETE'
+        );
 
         // Successful delete simply marks comment as deleted
         // but still counted/displayed with empty text
@@ -46,41 +66,106 @@ export function Comment({ comment, currentUsername }: CommentProps) {
         }
     }
 
+    async function showChildReplies(): Promise<void> {
+        const res = await fetchData(`/comments/${currentComment._id}/replies`, 'GET');
+
+        if (res instanceof Error || !res.ok) {
+            navigateTo('/error');
+        } else {
+            setCurrentComment(await res.json());
+            setCurrentLevel(currentLevel - 1);
+            setIsLastLevelShown(false);
+        }
+    }
+
     return (
-        <div className="flex flex-col justify-between gap-2 p-3 my-2 text-sm border rounded-md shadow-md bg-zinc-50">
-            <div className="flex justify-between">
-                <div className="flex items-center gap-2">
-                    {notDeleted && (
-                        <Avatar
-                            username={currentComment.commenter.username}
-                            avatarColor={currentComment.commenter.avatar}
-                            fontColour={currentComment.commenter.fontColour}
-                            isProfile={false}
+        <>
+            {currentLevel <= levelLimit && (
+                <div
+                    className={`flex flex-col justify-between gap-2 pb-1 pr-2 pl-3 my-1 text-sm border rounded-md shadow-md bg-zinc-50 ${deletedClass}`}
+                >
+                    {/* Top line */}
+                    <div className="flex items-start justify-between">
+                        {/* Username and timestamp */}
+                        <div className="flex items-center gap-2">
+                            {!deleted && (
+                                <Avatar
+                                    username={currentComment.commenter.username}
+                                    avatarColor={currentComment.commenter.avatar}
+                                    fontColour={currentComment.commenter.fontColour}
+                                    isProfile={false}
+                                />
+                            )}
+                            <p
+                                className="flex flex-col sm:flex-row sm:gap-3"
+                                aria-label="comment details"
+                            >
+                                <b>{!deleted ? currentComment.commenter.username : 'deleted'}</b>
+                                <i>{timestamp(currentComment.timestamp)}</i>
+                            </p>
+                        </div>
+
+                        <button
+                            onClick={(): void => setIsExpanded(!isExpanded)}
+                            aria-label={
+                                isExpanded ? 'collapse comment' : 'expand collapsed comment'
+                            }
+                        >
+                            {isExpanded ? '🞁' : '🞃'}
+                        </button>
+                    </div>
+
+                    {/* Comment body text */}
+                    {!deleted && isExpanded && (
+                        <p
+                            className="text-base break-words whitespace-pre-wrap"
+                            aria-label="comment body"
+                        >
+                            {htmlEntities.decode(currentComment.text)}
+                        </p>
+                    )}
+
+                    {!deleted && <hr className="mt-1" />}
+
+                    {/* Buttons */}
+                    {!deleted && isExpanded && (
+                        <CommentButtons
+                            showShowRepliesButton={hasReplies && isLastLevelShown}
+                            replyTextareaOpen={replyTextareaOpen}
+                            showChildReplies={showChildReplies}
+                            deleteComment={deleteComment}
+                            setReplyTextareaOpen={setReplyTextareaOpen}
                         />
                     )}
-                    <p className={deletedClass} aria-label="comment details">
-                        <b>{notDeleted ? currentComment.commenter.username : 'deleted'}</b> -{' '}
-                        <i>{timestamp(currentComment.timestamp)}</i>
-                    </p>
+
+                    {replyTextareaOpen && (
+                        <AddComment
+                            postID={currentComment.post}
+                            setRepliedComment={setCurrentComment}
+                            setCommentCount={setCommentCount}
+                            commentToReply={currentComment}
+                            setReplyTextareaOpen={setReplyTextareaOpen}
+                            setParentLevel={setCurrentLevel}
+                            setIsParentLastLevelShown={setIsLastLevelShown}
+                        />
+                    )}
+
+                    {/* Replies */}
+                    {isExpanded &&
+                        hasRepliesToShow &&
+                        currentComment.replies.map(
+                            (reply, i): JSX.Element => (
+                                <Comment
+                                    key={reply._id}
+                                    comment={currentComment.replies[i]}
+                                    currentUsername={currentUsername}
+                                    level={currentLevel + 1}
+                                    setCommentCount={setCommentCount}
+                                />
+                            )
+                        )}
                 </div>
-
-                {notDeleted && currentUsername === currentComment.commenter.username && (
-                    <button
-                        onClick={deleteComment}
-                        className="transition hover:text-zinc-500"
-                        aria-label="Delete comment"
-                    >
-                        Delete
-                    </button>
-                )}
-            </div>
-
-            <p
-                className={`text-base break-words whitespace-pre-wrap ${deletedClass}`}
-                aria-label="comment body"
-            >
-                {htmlEntities.decode(currentComment.text || 'deleted')}
-            </p>
-        </div>
+            )}
+        </>
     );
 }

@@ -1,6 +1,7 @@
 import { useContext, useEffect, useRef } from 'react';
 import { Bookmark } from '../Bookmark';
 import { UserContext } from '../../App';
+import htmlEntities from 'he';
 
 type TitleAreaProps = {
     postID: string;
@@ -50,7 +51,7 @@ export function TitleArea({
 
             {/* textWrap not recognised but experimental in Chrome 114+ */}
             <h1 className="my-2 text-4xl font-bold leading-tight" ref={titleRef}>
-                {title}
+                {htmlEntities.decode(title)}
             </h1>
 
             <div className="flex flex-col items-start justify-between gap-2 sm:items-center sm:flex-row">

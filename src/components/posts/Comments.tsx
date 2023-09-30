@@ -46,7 +46,6 @@ export function Comments({ commentCount, postID }: CommentsProps) {
                     postID={postID}
                     setComments={setComments}
                     setCommentCount={setCurrentCommentCount}
-                    setErrors={setErrors}
                 />
             ) : (
                 <div>
@@ -77,6 +76,8 @@ export function Comments({ commentCount, postID }: CommentsProps) {
                             key={comment._id}
                             comment={comment}
                             currentUsername={user?.username}
+                            level={1}
+                            setCommentCount={setCurrentCommentCount}
                         />
                     )
                 )}

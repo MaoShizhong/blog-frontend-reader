@@ -5,6 +5,7 @@ import { User } from '../../App';
 import { Post } from '../../pages/Home';
 import { Errors } from '../../pages/AccountHandler';
 import { ErrorList } from '../ErrorList';
+import { useNavigate } from 'react-router-dom';
 
 type BookmarkedPostsProps = {
     user: User;
@@ -46,8 +47,10 @@ function useGetBookmarkedPosts(user: User) {
         (async (): Promise<void> => {
             const res = await fetchData(`/users/${user?.id}/bookmarks`, 'GET');
 
+            const navigateTo = useNavigate();
+
             if (res instanceof Error) {
-                console.error(res);
+                navigateTo('/error');
             } else {
                 const resAsJSON = await res.json();
 

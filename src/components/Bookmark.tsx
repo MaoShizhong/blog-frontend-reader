@@ -2,6 +2,7 @@ import { useContext, useRef } from 'react';
 import { fetchData } from '../helpers/fetch_options';
 import { UserContext } from '../App';
 import { animatePing } from '../helpers/animation';
+import { useNavigate } from 'react-router-dom';
 
 type BookmarkProps = { postID: string; includeText: boolean; isBookmarked?: boolean };
 
@@ -10,6 +11,8 @@ export function Bookmark({ postID, includeText, isBookmarked }: BookmarkProps) {
 
     const iconRef = useRef<SVGSVGElement>(null);
     const underLayerRef = useRef<SVGSVGElement>(null);
+
+    const navigateTo = useNavigate();
 
     const text = isBookmarked ? 'Bookmarked' : 'Add to bookmarks';
 
@@ -20,12 +23,11 @@ export function Bookmark({ postID, includeText, isBookmarked }: BookmarkProps) {
         );
 
         if (res instanceof Error) {
-            console.error(res);
+            navigateTo('/error');
         } else if (res.ok) {
             const user = await res.json();
             setUser(user);
         } else {
-            console.error('else', res);
             console.error(await res.json());
         }
     }

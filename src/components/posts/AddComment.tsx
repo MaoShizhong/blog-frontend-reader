@@ -6,62 +6,111 @@ import { useNavigate } from 'react-router-dom';
 
 type AddCommentProps = {
     postID: string;
-    setComments: Dispatch<SetStateAction<Comment[]>>;
+    // For top level comments
+    setComments?: Dispatch<SetStateAction<Comment[]>>;
+    // For replies
+    setRepliedComment?: Dispatch<SetStateAction<Comment>>;
+    // For post regardless of comment type
     setCommentCount: Dispatch<SetStateAction<number>>;
-    setErrors: Dispatch<SetStateAction<boolean>>;
+    commentToReply?: Comment;
+    setReplyTextareaOpen?: Dispatch<SetStateAction<boolean>>;
+    setIsParentLastLevelShown?: Dispatch<SetStateAction<boolean>>;
+    setParentLevel?: Dispatch<SetStateAction<number>>;
 };
 
-export function AddComment({ postID, setComments, setCommentCount, setErrors }: AddCommentProps) {
+export function AddComment({
+    postID,
+    setComments,
+    setRepliedComment,
+    setCommentCount,
+    commentToReply,
+    setReplyTextareaOpen,
+    setIsParentLastLevelShown,
+    setParentLevel,
+}: AddCommentProps) {
     const { user } = useContext(UserContext);
 
     const formRef = useRef<HTMLFormElement>(null);
     const textareaRef = useRef<HTMLTextAreaElement>(null);
     const navigateTo = useNavigate();
 
-    async function postComment(e: FormEvent): Promise<void> {
+    function postComment(e: FormEvent): void {
         e.preventDefault();
 
-        if (!formRef.current || !textareaRef.current) {
+        if (!formRef.current) {
             console.error('Error - no comment form found');
             return;
         }
 
         const formData = new FormData(formRef.current);
 
+        commentToReply ? postReply(formData) : postNewComment(formData);
+    }
+
+    async function postNewComment(formData: FormData): Promise<void> {
         const res = await fetchData(
             `/posts/${postID}/comments?commenterID=${user?.id}`,
             'POST',
             formData
         );
 
-        if (res instanceof Error) {
+        if (res instanceof Error || !res.ok) {
             navigateTo('/error');
         } else if (res.ok) {
             const newComment = await res.json();
 
-            setComments((prev): Comment[] => [newComment, ...prev]);
+            setComments!((prev): Comment[] => [newComment, ...prev]);
             setCommentCount((prev): number => prev + 1);
+        }
+    }
 
-            textareaRef.current.value = '';
-        } else {
-            setErrors(await res.json());
+    async function postReply(formData: FormData): Promise<void> {
+        const res = await fetchData(
+            `/posts/${commentToReply?.post}/comments?commenterID=${user?.id}&parent=${commentToReply?._id}`,
+            'POST',
+            formData
+        );
+
+        if (res instanceof Error || !res.ok) {
+            navigateTo('/error');
+        } else if (res.ok) {
+            const newComment = await res.json();
+
+            setRepliedComment!(newComment);
+            setCommentCount((prev: number): number => prev + 1);
+            setReplyTextareaOpen!(false);
+            setIsParentLastLevelShown!(false);
+            setParentLevel!((prev: number): number => {
+                return prev === 3 ? prev - 1 : prev;
+            });
         }
     }
 
     return (
-        <form className="flex flex-col gap-2" onSubmit={postComment} ref={formRef}>
-            <textarea
-                name="text"
-                rows={3}
-                placeholder="Let your thoughts be heard!"
-                className="min-h-[7rem] px-2 py-1 border rounded-md shadow-md bg-zinc-50"
-                ref={textareaRef}
-                required
-            ></textarea>
+        <>
+            {commentToReply && <hr />}
 
-            <button className="self-end px-2 border rounded-md shadow-md active:scale-95 hover:drop-shadow-lg bg-zinc-50">
-                Post comment
-            </button>
-        </form>
+            <form
+                className="flex flex-col gap-2"
+                onSubmit={(e: FormEvent): void => {
+                    postComment(e);
+                    if (textareaRef.current) textareaRef.current.value = '';
+                }}
+                ref={formRef}
+            >
+                <textarea
+                    name="text"
+                    rows={3}
+                    placeholder="Let your thoughts be heard!"
+                    className="min-h-[7rem] px-2 py-1 border rounded-md shadow-md bg-zinc-50"
+                    ref={textareaRef}
+                    required
+                ></textarea>
+
+                <button className="self-end px-2 transition border rounded-md shadow-md active:scale-95 hover:drop-shadow-lg bg-zinc-50">
+                    Post comment
+                </button>
+            </form>
+        </>
     );
 }
