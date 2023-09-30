@@ -53,6 +53,7 @@ export function Comments({ commentCount, postID }: CommentsProps) {
                     <Link
                         to="/login"
                         className="inline-block px-2 transition border rounded-md shadow-md bg-zinc-50 hover:drop-shadow-lg"
+                        state={{ previousPage: window.location.pathname }}
                     >
                         Login
                     </Link>{' '}
@@ -60,6 +61,7 @@ export function Comments({ commentCount, postID }: CommentsProps) {
                     <Link
                         to="/signup"
                         className="inline-block px-2 transition border rounded-md shadow-md bg-zinc-50 hover:drop-shadow-lg"
+                        state={{ previousPage: window.location.pathname }}
                     >
                         Sign Up
                     </Link>{' '}

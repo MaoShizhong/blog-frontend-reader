@@ -43,11 +43,11 @@ function useGetBookmarkedPosts(user: User) {
     const [errors, setErrors] = useState<Errors>(null);
     const [loading, setLoading] = useState(true);
 
+    const navigateTo = useNavigate();
+
     useEffect((): void => {
         (async (): Promise<void> => {
             const res = await fetchData(`/users/${user?.id}/bookmarks`, 'GET');
-
-            const navigateTo = useNavigate();
 
             if (res instanceof Error) {
                 navigateTo('/error');
