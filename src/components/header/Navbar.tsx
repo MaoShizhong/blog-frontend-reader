@@ -4,11 +4,11 @@ import { NavLink } from 'react-router-dom';
 import { fetchData } from '../../helpers/fetch_options';
 
 export function Navbar() {
-    const { user, redirectToHome } = useContext(UserContext);
+    const { user, setUser } = useContext(UserContext);
 
     async function logout(): Promise<void> {
         await fetchData('/auth/tokens', 'DELETE');
-        redirectToHome();
+        setUser(undefined);
     }
 
     return (
@@ -25,11 +25,19 @@ export function Navbar() {
                 </>
             ) : (
                 <>
-                    <NavLink to="/login" className="transition hover:text-slate-500">
+                    <NavLink
+                        to="/login"
+                        className="transition hover:text-slate-500"
+                        state={{ previousPage: window.location.pathname }}
+                    >
                         Login
                     </NavLink>
 
-                    <NavLink to="/signup" className="transition hover:text-slate-500">
+                    <NavLink
+                        to="/signup"
+                        className="transition hover:text-slate-500"
+                        state={{ previousPage: window.location.pathname }}
+                    >
                         Sign up
                     </NavLink>
                 </>

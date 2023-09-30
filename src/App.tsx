@@ -19,15 +19,13 @@ type UserState = {
     setUser: Dispatch<SetStateAction<User>>;
 };
 
-type AuthRouteFunctions = {
-    redirectToHome: (user?: User) => void;
+type AuthRefresher = {
     refreshAccessToken: () => Promise<void>;
 };
 
-export const UserContext = createContext<UserState & AuthRouteFunctions>({
+export const UserContext = createContext<UserState & AuthRefresher>({
     user: undefined,
     setUser: (): void => {},
-    redirectToHome: (): void => {},
     refreshAccessToken: async (): Promise<void> => {},
 });
 
@@ -41,11 +39,6 @@ export function App() {
         refreshAccessToken();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
-
-    function redirectToHome(user?: User): void {
-        setCurrentUser(user);
-        navigateTo('/');
-    }
 
     async function refreshAccessToken(): Promise<void> {
         const res = await fetchData('/auth/tokens', 'PUT');
@@ -68,7 +61,6 @@ export function App() {
             value={{
                 user: currentUser,
                 setUser: setCurrentUser,
-                redirectToHome,
                 refreshAccessToken,
             }}
         >

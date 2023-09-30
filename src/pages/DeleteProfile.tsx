@@ -7,7 +7,7 @@ import { ErrorList } from '../components/ErrorList';
 import { Errors } from './AccountHandler';
 
 export function DeleteProfile() {
-    const { user, redirectToHome } = useContext(UserContext);
+    const { user, setUser } = useContext(UserContext);
     const { userID } = useParams();
 
     const [errors, setErrors] = useState<Errors>(null);
@@ -19,7 +19,8 @@ export function DeleteProfile() {
         if (res instanceof Error) {
             navigateTo('/error');
         } else if (res.ok) {
-            redirectToHome();
+            setUser(undefined);
+            navigateTo('/');
         } else {
             setErrors(await res.json());
         }

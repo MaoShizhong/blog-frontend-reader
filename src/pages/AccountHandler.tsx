@@ -3,7 +3,7 @@ import { UserContext } from '../App';
 import { fetchData } from '../helpers/fetch_options';
 import { SignupFormFields } from '../components/login/SignupFormFields';
 import { LoginFormFields } from '../components/login/LoginFormFields';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 type ValidationError = {
     type: string;
@@ -23,7 +23,9 @@ type AccountHandlerProps = { loginType: AccessType };
 export function AccountHandler({ loginType }: AccountHandlerProps) {
     const [errors, setErrors] = useState<Errors>(null);
 
-    const { redirectToHome } = useContext(UserContext);
+    const { setUser } = useContext(UserContext);
+
+    const location = useLocation();
 
     const formRef = useRef<HTMLFormElement>(null);
     const navigateTo = useNavigate();
@@ -40,7 +42,13 @@ export function AccountHandler({ loginType }: AccountHandlerProps) {
             navigateTo('/error');
         } else {
             const user = await res.json();
-            res.ok ? redirectToHome(user) : setErrors(user);
+
+            if (res.ok) {
+                setUser(user);
+                navigateTo(location.state.previousPage);
+            } else {
+                setErrors(user);
+            }
         }
     }
 
