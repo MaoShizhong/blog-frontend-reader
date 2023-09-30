@@ -112,7 +112,19 @@ export function Comment({ comment, currentUsername, level, setCommentCount }: Co
                                     isExpanded ? 'collapse comment' : 'expand collapsed comment'
                                 }
                             >
-                                {isExpanded ? '🞁' : '🞃'}
+                                {isExpanded ? (
+                                    <svg
+                                        viewBox="0 5 18 18"
+                                        focusable="false"
+                                        className="h-5 -scale-100"
+                                    >
+                                        <path d="M7 10l5 5 5-5z"></path>
+                                    </svg>
+                                ) : (
+                                    <svg viewBox="5 0 18 18" focusable="false" className="h-5">
+                                        <path d="M7 10l5 5 5-5"></path>
+                                    </svg>
+                                )}
                             </button>
                         )}
                     </div>

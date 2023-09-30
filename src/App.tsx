@@ -59,7 +59,7 @@ export function App() {
         } else {
             // Force log out if no valid refresh token
             await fetchData('/auth/tokens', 'DELETE');
-            redirectToHome();
+            setCurrentUser(undefined);
         }
     }
 
