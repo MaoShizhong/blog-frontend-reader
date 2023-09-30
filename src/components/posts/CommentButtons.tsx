@@ -2,6 +2,7 @@ import { Dispatch, SetStateAction } from 'react';
 import { DeleteButton } from '../DeleteButton';
 
 type CommentButtonsProps = {
+    isOwnComment: boolean;
     showShowRepliesButton: boolean;
     replyTextareaOpen: boolean;
     showChildReplies: () => Promise<void>;
@@ -10,6 +11,7 @@ type CommentButtonsProps = {
 };
 
 export function CommentButtons({
+    isOwnComment,
     showShowRepliesButton,
     replyTextareaOpen,
     showChildReplies,
@@ -18,7 +20,7 @@ export function CommentButtons({
 }: CommentButtonsProps) {
     return (
         <div className="flex justify-end gap-8">
-            <DeleteButton callback={deleteComment} />
+            {isOwnComment && <DeleteButton callback={deleteComment} />}
 
             {showShowRepliesButton && (
                 <button

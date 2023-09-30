@@ -132,6 +132,7 @@ export function Comment({ comment, currentUsername, level, setCommentCount }: Co
                     {/* Buttons */}
                     {!deleted && isExpanded && (
                         <CommentButtons
+                            isOwnComment={currentUsername === currentComment.commenter.username}
                             showShowRepliesButton={hasReplies && isLastLevelShown}
                             replyTextareaOpen={replyTextareaOpen}
                             showChildReplies={showChildReplies}

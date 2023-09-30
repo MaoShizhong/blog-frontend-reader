@@ -30,11 +30,7 @@ export function Logo() {
                 )}
                 BLOG
             </Link>
-            <a
-                href="https://github.com/MaoShizhong/blog-frontend-reader"
-                target="_blank"
-                rel="noreferrer"
-            >
+            <a href="https://github.com/MaoShizhong/dotBLOG" target="_blank" rel="noreferrer">
                 <img
                     src="/github-light.png"
                     alt="github link"
