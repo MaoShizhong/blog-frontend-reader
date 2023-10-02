@@ -22,7 +22,7 @@ export function IndividualPost() {
             ) : loading || !post ? (
                 <Loading text="Fetching article..." />
             ) : (
-                <div className="flex flex-col items-center mx-auto max-w-prose">
+                <div className="flex flex-col items-center w-full mx-auto max-w-prose">
                     <article className="w-full mb-24">
                         <TitleArea
                             postID={post._id}
