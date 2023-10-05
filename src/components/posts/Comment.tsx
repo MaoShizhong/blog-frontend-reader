@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { Dispatch, SetStateAction, useState } from 'react';
 import { AddComment } from './AddComment';
 import { CommentButtons } from './CommentButtons';
+import { ExpandButton } from '../ExpandButton';
 
 type Commenter = {
     username: string;
@@ -106,26 +107,7 @@ export function Comment({ comment, currentUsername, level, setCommentCount }: Co
                         </div>
 
                         {(!deleted || hasReplies) && (
-                            <button
-                                onClick={(): void => setIsExpanded(!isExpanded)}
-                                aria-label={
-                                    isExpanded ? 'collapse comment' : 'expand collapsed comment'
-                                }
-                            >
-                                {isExpanded ? (
-                                    <svg
-                                        viewBox="0 5 18 18"
-                                        focusable="false"
-                                        className="h-5 -scale-100"
-                                    >
-                                        <path d="M7 10l5 5 5-5z"></path>
-                                    </svg>
-                                ) : (
-                                    <svg viewBox="5 0 18 18" focusable="false" className="h-5">
-                                        <path d="M7 10l5 5 5-5"></path>
-                                    </svg>
-                                )}
-                            </button>
+                            <ExpandButton isExpanded={isExpanded} setIsExpanded={setIsExpanded} />
                         )}
                     </div>
 

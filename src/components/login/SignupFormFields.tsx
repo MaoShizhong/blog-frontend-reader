@@ -1,5 +1,6 @@
 import { ErrorList } from '../ErrorList';
 import { Errors } from '../../pages/AccountHandler';
+import { PasswordReqs } from './PasswordReqs';
 
 type SignupFormProps = {
     errors: Errors;
@@ -24,12 +25,6 @@ export function SignupFormFields({ errors }: SignupFormProps) {
                 />
             </label>
 
-            <ul className="w-10/12 text-center">
-                <li>Password must contain at least 8 characters</li>
-                <li>Password must contain at least 1 uppercase</li>
-                <li>Password must contain at least 1 lowercase</li>
-                <li>Password must contain at least 1 number</li>
-            </ul>
             <label className="flex flex-col">
                 Password (required):
                 <input
@@ -49,6 +44,8 @@ export function SignupFormFields({ errors }: SignupFormProps) {
                     required
                 />
             </label>
+
+            <PasswordReqs />
 
             <button className="px-4 py-1 transition bg-white border border-black rounded-md hover:scale-110">
                 Sign up
