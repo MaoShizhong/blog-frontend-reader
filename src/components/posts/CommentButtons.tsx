@@ -1,4 +1,5 @@
-import { Dispatch, SetStateAction } from 'react';
+import { Dispatch, SetStateAction, useContext } from 'react';
+import { UserContext } from '../../App';
 import { DeleteButton } from '../DeleteButton';
 
 type CommentButtonsProps = {
@@ -18,25 +19,32 @@ export function CommentButtons({
     deleteComment,
     setReplyTextareaOpen,
 }: CommentButtonsProps) {
+    const { user } = useContext(UserContext);
     return (
-        <div className="flex justify-end gap-8">
-            {isOwnComment && <DeleteButton callback={deleteComment} />}
+        <>
+            {(user || showShowRepliesButton) && <hr className="mt-1" />}
 
-            {showShowRepliesButton && (
-                <button
-                    className="mr-auto italic transition hover:text-zinc-500"
-                    onClick={showChildReplies}
-                >
-                    Show more replies
-                </button>
-            )}
+            <div className="flex justify-end gap-8">
+                {isOwnComment && <DeleteButton callback={deleteComment} />}
 
-            <button
-                className="ml-auto transition hover:text-zinc-500"
-                onClick={(): void => setReplyTextareaOpen(!replyTextareaOpen)}
-            >
-                {replyTextareaOpen ? 'Cancel' : 'Reply'}
-            </button>
-        </div>
+                {showShowRepliesButton && (
+                    <button
+                        className="mr-auto italic transition hover:text-zinc-500"
+                        onClick={showChildReplies}
+                    >
+                        Show more replies
+                    </button>
+                )}
+
+                {user && (
+                    <button
+                        className="ml-auto transition hover:text-zinc-500"
+                        onClick={(): void => setReplyTextareaOpen(!replyTextareaOpen)}
+                    >
+                        {replyTextareaOpen ? 'Cancel' : 'Reply'}
+                    </button>
+                )}
+            </div>
+        </>
     );
 }

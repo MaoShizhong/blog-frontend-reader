@@ -1,8 +1,8 @@
 import { Dispatch, FormEvent, SetStateAction, useContext, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { UserContext } from '../../App';
 import { fetchData } from '../../helpers/fetch_options';
 import { Comment } from './Comment';
-import { UserContext } from '../../App';
-import { useNavigate } from 'react-router-dom';
 
 type AddCommentProps = {
     postID: string;
@@ -33,6 +33,8 @@ export function AddComment({
     const formRef = useRef<HTMLFormElement>(null);
     const textareaRef = useRef<HTMLTextAreaElement>(null);
     const navigateTo = useNavigate();
+
+    console.log(user);
 
     function postComment(e: FormEvent): void {
         e.preventDefault();

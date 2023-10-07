@@ -1,12 +1,12 @@
-import { timestamp } from '../../helpers/dates';
 import htmlEntities from 'he';
-import { fetchData } from '../../helpers/fetch_options';
-import { Avatar, FontColour } from '../profile/Avatar';
-import { useNavigate } from 'react-router-dom';
 import { Dispatch, SetStateAction, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { timestamp } from '../../helpers/dates';
+import { fetchData } from '../../helpers/fetch_options';
+import { ExpandButton } from '../ExpandButton';
+import { Avatar, FontColour } from '../profile/Avatar';
 import { AddComment } from './AddComment';
 import { CommentButtons } from './CommentButtons';
-import { ExpandButton } from '../ExpandButton';
 
 type Commenter = {
     username: string;
@@ -120,8 +120,6 @@ export function Comment({ comment, currentUsername, level, setCommentCount }: Co
                             {htmlEntities.decode(currentComment.text)}
                         </p>
                     )}
-
-                    {!deleted && <hr className="mt-1" />}
 
                     {/* Buttons */}
                     {!deleted && isExpanded && (
